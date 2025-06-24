@@ -15,15 +15,21 @@ import shop from './assets/shop.png'
 import dog from './assets/dog.png'
 import car from './assets/car.png'
 import arrow2 from './assets/arrrow2.png'
-import img from './assets/img.png'
 import social from './assets/social.png'
 import footer from './assets/footer.png'
 import map from './assets/map.png'
-import { Button } from 'antd'
+import { Button, Modal } from 'antd'
 
 const App = () => {
     let api = 'https://6821ee75b342dce8004c674e.mockapi.io/12/link'
     let [user, setUser] = useState([])
+
+    let [addDialog, setAddDialog] = useState(false)
+    let [addname, setAddname] = useState('')
+    let [addtitle, setAddtitle] = useState('')
+    let [adddescription, setAdddescription] = useState('')
+    let [addjob, setAddjob] = useState('')
+    let [addstatus, setAddstatus] = useState('true')
 
     async function get() {
         try {
@@ -59,6 +65,35 @@ const App = () => {
         } catch (error) {
             console.error(error)
         }
+    }
+
+    async function addNewUser() {
+        let newUser = {
+            name: addname,
+            title: addtitle,
+            description: adddescription,
+            job: addjob,
+            status: addstatus == 'true',
+        }
+        try {
+            await fetch(api, {
+                method: "POST",
+                header: { 'Content-Type': "application/json" },
+                body: JSON.stringify(newUser)
+            })
+            get()
+            setAddDialog(false)
+            setAddname('')
+            setAddtitle('')
+            setAdddescription('')
+            setAddjob('')
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    const closeAddBtn = () => {
+        setAddDialog(false)
     }
 
     useEffect(() => {
@@ -219,8 +254,28 @@ const App = () => {
                         </div>
                     </div>
                     <div className="">
-                        <h1 className='font-medium mb-10 text-[28px]'>Отзывы о Lujo BlackJet</h1>
-                        <div className="flex flex-col md:flex-row gap-3">
+                        <div className="flex items-center justify-between">
+                            <h1 className='font-medium mb-10 text-[28px]'>Отзывы о Lujo BlackJet</h1>
+                            <Button type='primary' onClick={() => setAddDialog(true)}>Add New User</Button>
+                        </div>
+                        <Modal
+                            title='Add Modal'
+                            onOk={addNewUser}
+                            onCancel={closeAddBtn}
+                            open={addDialog}
+                        >
+                            <div className="flex flex-col items-center">
+                                <input type="text" className="w-full p-2.5" placeholder='add name' value={addname} onChange={(e) => setAddname(e.target.value)} />
+                                <input type="text" className="w-full p-2.5" placeholder='add title' value={addtitle} onChange={(e) => setAddtitle(e.target.value)} />
+                                <input type="text" className="w-full p-2.5" placeholder='add job' value={addjob} onChange={(e) => setAddjob(e.target.value)} />
+                                <input type="text" className="w-full p-2.5" placeholder='add description' value={adddescription} onChange={(e) => setAdddescription(e.target.value)} />
+                                <select className="w-full p-2.5" value={addstatus} onChange={(e) => setAddstatus(e.target.value)} >
+                                    <option value="true">Active</option>
+                                    <option value="false">Inactive</option>
+                                </select>
+                            </div>
+                        </Modal>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                             {user.map(e => {
                                 return (
                                     <div key={e.id} className='rounded-[10px] p-7 pb-[65px] bg-[#fffdff]'>
