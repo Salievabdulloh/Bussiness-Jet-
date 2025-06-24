@@ -1,0 +1,28 @@
+{
+  "data": [
+    {
+      "name": "Abdulloh",
+      "age": 22,
+      "status": true,
+      "id": "1"
+    },
+    {
+      "name": "Ali",
+      "age": 31,
+      "status": true,
+      "id": "2"
+    },
+    {
+      "id": "00cc",
+      "name": "Abubakr",
+      "age": "22",
+      "status": false
+    },
+    {
+      "id": "6877",
+      "name": "Bilol",
+      "age": "33",
+      "status": false
+    }
+  ]
+}
